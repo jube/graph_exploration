@@ -31,6 +31,11 @@ int main(int argc, char *argv[]) {
   auto coeffs = g.computeExactNormalizedAlphaMatrix(length);
   auto pi = disc::computePii(coeffs, nullptr);
 
+  for (auto x : pi) {
+    std::cout << x << ' ';
+  }
+  std::cout << '\n';
+
   std::discrete_distribution<uint64_t> distribution(pi.begin(), pi.end());
 
   std::cout << "Exact:\n";

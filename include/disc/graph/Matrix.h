@@ -2,6 +2,8 @@
 #define DISC_MATRIX_H
 
 #include <cassert>
+
+#include <iostream>
 #include <vector>
 
 namespace disc {
@@ -91,6 +93,17 @@ namespace disc {
   };
 
 
+  template<typename T>
+  std::ostream& operator<<(std::ostream& o, const Matrix<T>& m) {
+    for (std::size_t y = 0; y < m.getCols(); ++y) {
+      for (std::size_t x = 0; x < m.getRows(); ++x) {
+        o << ' ' << m(x, y);
+      }
+      o << '\n';
+    }
+
+    return o;
+  }
 
 }
 

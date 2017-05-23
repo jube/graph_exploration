@@ -168,13 +168,13 @@ namespace disc {
 
     for (std::size_t k = 1; k <= length; ++k) {
       for (auto v : getVertices()) {
-        double count = 0;
+        double pathCount = 0;
 
         for (auto e : getOutEdges(v)) {
-          count += paths(getTarget(e).index, k - 1);
+          pathCount += paths(getTarget(e).index, k - 1);
         }
 
-        paths(v.index, k) = count;
+        paths(v.index, k) = pathCount;
       }
     }
 
@@ -327,8 +327,10 @@ namespace disc {
 
         m(j, j) = 1;
       } else {
+        double alphaJ = m(j, j);
+
         for (std::size_t i = 0; i < size; ++i) {
-          m(i, j) /= m(j, j);
+          m(i, j) /= alphaJ;
         }
       }
     }
