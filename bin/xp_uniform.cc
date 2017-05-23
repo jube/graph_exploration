@@ -25,24 +25,13 @@ int main(int argc, char *argv[]) {
   std::size_t ecc = g.getEccentricity();
   std::size_t length = static_cast<std::size_t>(disc::LengthFactor * ecc);
 
-  // random
+  std::size_t count = g.getVertexCount();
+  std::uniform_int_distribution<uint64_t> distribution(0, count - 1);
 
-  {
-    std::size_t count = g.getVertexCount();
-    std::uniform_int_distribution<uint64_t> distribution(0, count - 1);
-
-    std::cout << "Uniform:\n";
-    auto metrics = disc::coverGraphMultiple(g, engine, distribution, length, disc::CoverTries);
-    auto mean = disc::computeMeanMetrics(metrics);
-    std::cout << mean << '\n';
-  }
-
-  {
-    std::cout << "Random:\n";
-    auto metrics = disc::coverGraphMultipleRandom(g, engine, length, disc::CoverTries);
-    auto mean = disc::computeMeanMetrics(metrics);
-    std::cout << mean << '\n';
-  }
+  std::cout << "Uniform:\n";
+  auto metrics = disc::coverGraphMultiple(g, engine, distribution, length, disc::CoverTries);
+  auto mean = disc::computeMeanMetrics(metrics);
+  std::cout << mean << '\n';
 
   return EXIT_SUCCESS;
 }

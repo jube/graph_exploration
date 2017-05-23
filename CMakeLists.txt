@@ -48,6 +48,7 @@ macro(add_graph_executable NAME)
 endmacro()
 
 add_graph_executable(graph_features)
-add_graph_executable(xp_random_and_uniform)
+add_graph_executable(xp_random)
+add_graph_executable(xp_uniform)
 add_graph_executable(xp_exact)
 add_graph_executable(xp_approx)
