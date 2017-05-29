@@ -307,7 +307,7 @@ namespace disc {
     Matrix<double> m(count, count);
 
     for (auto j : getVertices()) {
-      std::cout << '*' << std::flush;
+      std::cout << '\r' << j.index + 1 << '/' << count << std::flush;
 
       // alpha_j
 
