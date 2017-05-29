@@ -374,6 +374,8 @@ namespace disc {
     Matrix<double> m(count, count);
 
     for (std::size_t i = 0; i < tries; ++i) {
+      std::cout << '\r' << i + 1 << '/' << tries << std::flush;
+
       auto path = makeUniformPath(length, engine, paths);
 
       for (auto v : path) {
@@ -389,6 +391,8 @@ namespace disc {
       }
 
     }
+
+    std::cout << '\n';
 
     return m;
   }
