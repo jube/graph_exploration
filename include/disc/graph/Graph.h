@@ -181,6 +181,8 @@ namespace disc {
 
     Matrix<double> computeApproxNormalizedAlphaMatrix(std::size_t length, std::size_t tries, Engine& engine) const;
 
+    Matrix<double> computeApproxNormalizedAlphaMatrixWithThreshold(std::size_t length, std::size_t tries, Engine& engine, double threshold) const;
+
     // import
 
     void clear();

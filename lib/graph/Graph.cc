@@ -335,9 +335,12 @@ namespace disc {
   static void matrixNormalizeByDiagonal(Matrix<double>& m) {
     assert(m.getRows() == m.getCols());
     std::size_t size = m.getRows();
+    int zeroes = 0;
 
     for (std::size_t j = 0; j < size; ++j) {
       if (m(j, j) <= std::numeric_limits<double>::epsilon()) {
+        ++zeroes;
+
         for (std::size_t i = 0; i < size; ++i) {
           m(i, j) = 0;
         }
@@ -351,6 +354,8 @@ namespace disc {
         }
       }
     }
+
+    std::cout << "number of zeroes on the diagonal: " << zeroes << '/' << size <<  '\n';
   }
 
   Matrix<double> Graph::computeExactNormalizedAlphaMatrix(std::size_t length) const {
@@ -407,6 +412,61 @@ namespace disc {
 
     std::chrono::duration<double> diff = finish - start;
     std::cout << "alpha_ij_over_alpha_j construction: " << diff.count() << '\n';
+
+    return m;
+  }
+
+  Matrix<double> Graph::computeApproxNormalizedAlphaMatrixWithThreshold(std::size_t length, std::size_t tries, Engine& engine, double threshold) const {
+    auto start = std::chrono::steady_clock::now();
+
+    auto m = computeApproxAlphaMatrix(length, tries, engine);
+
+    // special treatment when m(j, j) == 0
+
+    int zeroes = 0;
+    std::size_t size = m.getRows();
+    std::size_t r = static_cast<std::size_t>(threshold);
+
+    for (std::size_t j = 0; j < size; ++j) {
+      if (m(j, j) <= threshold) {
+        ++zeroes;
+
+        for (std::size_t i = 0; i < size; ++i) {
+          m(i, j) = 0;
+        }
+
+        auto derived = buildGraphCrossingOneVertex(*this, { j });
+        auto paths = derived.computePathCountOfMaximumLength(length);
+
+        for (std::size_t k = 0; k < r; ++k) {
+          auto path = derived.makeUniformPath(length, engine, paths);
+
+          for (auto v : path) {
+            ++m(derived(v).index, j);
+          }
+        }
+
+        double alphaJ = m(j, j);
+
+        for (std::size_t i = 0; i < size; ++i) {
+          m(i, j) /= alphaJ;
+        }
+      } else {
+        double alphaJ = m(j, j);
+
+        for (std::size_t i = 0; i < size; ++i) {
+          m(i, j) /= alphaJ;
+        }
+      }
+    }
+
+    auto finish = std::chrono::steady_clock::now();
+
+    std::cout << "number of zeroes on the diagonal: " << zeroes << '/' << size <<  '\n';
+
+    std::chrono::duration<double> diff = finish - start;
+    std::cout << "alpha_ij_over_alpha_j construction: " << diff.count() << '\n';
+
 
     return m;
   }
