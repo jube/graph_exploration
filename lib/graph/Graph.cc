@@ -441,12 +441,19 @@ namespace disc {
         for (std::size_t k = 0; k < r; ++k) {
           auto path = derived.makeUniformPath(length, engine, paths);
 
+          std::set<VertexDescriptor> set;
+
           for (auto v : path) {
-            ++m(derived(v).index, j);
+            set.insert(derived(v).index);
+          }
+
+          for (auto v : set) {
+            ++m(v.index, j);
           }
         }
 
         double alphaJ = m(j, j);
+        assert(static_cast<std::size_t>(alphaJ) == r);
 
         for (std::size_t i = 0; i < size; ++i) {
           m(i, j) /= alphaJ;
