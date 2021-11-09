@@ -29,7 +29,7 @@
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
-    std::cerr << "Usage: xp_randon_and_uniform <graph>\n";
+    std::cerr << "Usage: xp_random <graph>\n";
     return EXIT_FAILURE;
   }
 

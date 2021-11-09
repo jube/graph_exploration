@@ -173,6 +173,8 @@ namespace disc {
 
     std::vector<VertexDescriptor> makeRandomPath(std::size_t length, Engine& engine) const;
 
+    std::vector<VertexDescriptor> makeUnexploredPath(std::size_t length, Engine& engine, std::set<VertexDescriptor>& visited) const;
+
     Matrix<double> computeExactAlphaMatrix(std::size_t length) const;
 
     Matrix<double> computeExactNormalizedAlphaMatrix(std::size_t length) const;

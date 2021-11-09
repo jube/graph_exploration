@@ -29,6 +29,9 @@ namespace disc {
   Metrics coverGraphOnceRandom(const Graph& g, Engine& engine, std::size_t length);
   std::vector<Metrics> coverGraphMultipleRandom(const Graph& g, Engine& engine, std::size_t length, std::size_t tries);
 
+  Metrics coverGraphOnceUnexplored(const Graph& g, Engine& engine, std::size_t length);
+  std::vector<Metrics> coverGraphMultipleUnexplored(const Graph& g, Engine& engine, std::size_t length, std::size_t tries);
+
   template<typename Distribution>
   Metrics coverGraphOnce(const Graph& g, Engine& engine, Distribution distribution, std::size_t length) {
     Metrics res;

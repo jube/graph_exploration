@@ -115,7 +115,7 @@ namespace disc {
     glp_smcp smcp;
     glp_init_smcp(&smcp);
     smcp.presolve = GLP_OFF;
-    smcp.tm_lim = 2*60*1000; // 2 min
+    smcp.tm_lim = 20*60*1000; // 20 min
     smcp.msg_lev = GLP_MSG_ALL;
 
     int ret = glp_simplex(prob, &smcp);
