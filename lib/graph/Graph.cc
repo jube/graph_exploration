@@ -304,15 +304,14 @@ namespace disc {
   std::vector<VertexDescriptor> Graph::makeUnexploredPath(std::size_t length, Engine& engine, std::set<VertexDescriptor>& visited) const {
     VertexDescriptor unexplored;
 
-    std::cerr << visited.size() << '\n';
-
     do {
       std::uniform_int_distribution<std::size_t> dist(0, m_vertices.size() - 1);
       unexplored = m_vertices[dist(engine)].id;
     } while (visited.find(unexplored) != visited.end());
 
     auto derived = buildGraphCrossingOneVertex(*this, unexplored);
-    auto derivedPath = derived.makeRandomPath(length, engine);
+    auto paths = derived.computePathCountOfMaximumLength(length);
+    auto derivedPath = derived.makeUniformPath(length, engine, paths);
 
     std::vector<VertexDescriptor> path;
 
