@@ -322,6 +322,8 @@ namespace disc {
 //       visited.insert(v);
     }
 
+    assert(std::find(path.begin(), path.end(), unexplored) != path.end());
+
     return path;
   }
 
