@@ -30,7 +30,7 @@ run_experiment() {
 	OTHER_ARGS="$(echo "$@" | tr -s ' ' '-')-"
 
 	LOG_FILE="log/$(basename $EXPERIMENT)-$OTHER_ARGS$(basename ${GRAPH%.*}).log"
-	timeout 1s $EXPERIMENT $GRAPH "$@" > $LOG_FILE 2>&1
+	timeout 12h $EXPERIMENT $GRAPH "$@" > $LOG_FILE 2>&1
 	if [ $? -eq 124 ]
 	then
 		echo "\t$RED$EXPERIMENT $GRAPH "$@" timeout$NC"
