@@ -1,10 +1,25 @@
 #!/bin/dash
 
+ONLY_PRINT=0
+
+for ARG in "$@"
+do
+	case $ARG in
+		--only-print)
+			ONLY_PRINT=1
+			shift
+			;;
+	esac
+done
+
 if [ $# -ne 2 ]
 then
 	echo "Missing parameters" 1>&2
 	echo "Usage:" 1>&2
-	echo "\t$0 EXEC_DIR GRAPH_DIR" 1>&2
+	echo "\t$0 [OPTION] EXEC_DIR GRAPH_DIR" 1>&2
+	echo "" 1>&2
+	echo "Option:" 1>&2
+	echo "\t--only-print just print commands to standard output" 1>&2
 	exit 1
 fi
 
@@ -40,11 +55,26 @@ run_experiment() {
 	fi
 }
 
+print_experiment() {
+	GRAPH=$1
+	EXPERIMENT=$2
+
+	shift 2
+
+	OTHER_ARGS="$(echo "$@" | tr -s ' ' '-')-"
+
+	LOG_FILE="log/$(basename $EXPERIMENT)-$OTHER_ARGS$(basename ${GRAPH%.*}).log"
+	echo "timeout 12h $EXPERIMENT $GRAPH "$@" > $LOG_FILE 2>&1"
+}
+
 mkdir -p log
 
 for GRAPH in $GRAPH_LIST
 do
-	echo "graph name: $(basename $GRAPH)"
+	if [ $ONLY_PRINT -ne 1 ]
+	then
+		echo "graph name: $(basename $GRAPH)"
+	fi
 
 	for EXPERIMENT in $EXPERIMENT_LIST
 	do
@@ -52,7 +82,12 @@ do
 		then
 			for FACTOR in $FACTOR_LIST
 			do
-				run_experiment $GRAPH $EXPERIMENT $FACTOR
+				if [ $ONLY_PRINT -eq 1 ]
+				then
+					print_experiment $GRAPH $EXPERIMENT $FACTOR
+				else
+					run_experiment $GRAPH $EXPERIMENT $FACTOR
+				fi
 			done
 		elif [ "$(basename $EXPERIMENT)" = "xp_approx_threshold" ]
 		then
@@ -60,11 +95,21 @@ do
 			do
 				for THRESHOLD in $THRESHOLD_LIST
 				do
-					run_experiment $GRAPH $EXPERIMENT $FACTOR $THRESHOLD
+					if [ $ONLY_PRINT -eq 1 ]
+					then
+						print_experiment $GRAPH $EXPERIMENT $FACTOR $THRESHOLD
+					else
+						run_experiment $GRAPH $EXPERIMENT $FACTOR $THRESHOLD
+					fi
 				done
 			done
 		else
-			run_experiment $GRAPH $EXPERIMENT
+			if [ $ONLY_PRINT -eq 1 ]
+			then
+				print_experiment $GRAPH $EXPERIMENT
+			else
+				run_experiment $GRAPH $EXPERIMENT
+			fi
 		fi
 	done
 done
